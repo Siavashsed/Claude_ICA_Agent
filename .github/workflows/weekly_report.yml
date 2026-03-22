@@ -1,0 +1,32 @@
+name: ICA Weekly Marketing Report
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install certifi
+
+      - name: Run weekly report
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          HYROS_KEY: ${{ secrets.HYROS_KEY }}
+          WJ_KEY: ${{ secrets.WJ_KEY }}
+          META_TOKEN: ${{ secrets.META_TOKEN }}
+          META_ACCOUNT: ${{ secrets.META_ACCOUNT }}
+          CLARITY_TOKEN: ${{ secrets.CLARITY_TOKEN }}
+          CLARITY_PROJECT: ${{ secrets.CLARITY_PROJECT }}
+        run: python weekly_report.py
